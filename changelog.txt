@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.1
+Date: 27. 12. 2023
+  Bugfixes:
+    - Fixed a bug where attempting to change the filter on a moving train would lead to a game crash.
+      This issue was related to the usage of `get_output_inventory` during the movement of the train.
+      The fix involved switching to a more reliable method, `get_inventory(defines.inventory.cargo_wagon)`.
+      (Thanks https://github.com/VortiK for the report)
+---------------------------------------------------------------------------------------------------
 Version: 0.1.0
 Date: 27. 12. 2023
   Contributions:

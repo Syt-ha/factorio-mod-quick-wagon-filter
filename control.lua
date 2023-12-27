@@ -1,16 +1,6 @@
-local function applyFilterToInventory(outputInventory, filterItem)
-    for i = 1, #outputInventory do
-        outputInventory.set_filter(i, filterItem)
-    end
-end
-
-local function applyFilterToEntireTrain(initialWagon, filterItem)
-    local connectedWagons = initialWagon.train and initialWagon.train.cargo_wagons
-
-    if connectedWagons then
-        for i = 1, #connectedWagons do
-            applyFilterToInventory(connectedWagons[i].get_output_inventory(), filterItem)
-        end
+local function applyFilterToInventory(cargoInventory, filterItem)
+    for i = 1, #cargoInventory do
+        cargoInventory.set_filter(i, filterItem)
     end
 end
 
@@ -57,13 +47,18 @@ script.on_event(defines.events.on_gui_click, function(event)
 
     if element.name == "quick-wagon-filter-apply" or element.name == "quick-wagon-filter-apply-all" then
         local selector = element.parent["quick-wagon-filter-selector"]
-        local outputInventory = player.opened.get_output_inventory()
+        local cargoInventory = player.opened.get_inventory(defines.inventory.cargo_wagon)
 
         if element.name == "quick-wagon-filter-apply" then
-            applyFilterToInventory(outputInventory, selector.elem_value)
+            applyFilterToInventory(cargoInventory, selector.elem_value)
         end
         if element.name == "quick-wagon-filter-apply-all" then
-            applyFilterToEntireTrain(player.opened, selector.elem_value)
+            local connectedWagons = player.opened.train and player.opened.train.cargo_wagons
+            if connectedWagons then
+                for i = 1, #connectedWagons do
+                    applyFilterToInventory(connectedWagons[i].get_inventory(defines.inventory.cargo_wagon), selector.elem_value)
+                end
+            end
         end
     end
 end)
